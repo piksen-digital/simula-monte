@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimulaNegocio | Simulation Tool</title>
-    <meta name="description" content="Run Monte Carlo simulations for business decisions. Upload CSV data, configure scenarios, and get actionable insights.">
+    <title>SimulaMonte | Business Simulation Tool</title>
+    <meta name="description" content="Run Monte Carlo simulations for business decisions. Upload CSV data, configure scenarios, and get actionable insights for SMBs.">
+    <meta name="keywords" content="business simulation, Monte Carlo, pricing strategy, inventory optimization, SMB decision tools">
+    <meta name="author" content="SimulaMonte">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌀</text></svg>">
     <style>
         :root {
             --color-primary: #2563eb;
@@ -98,6 +102,301 @@
         }
         
         @keyframes grow {
+            to { transform: scaleX(1); }
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-svg {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid var(--color-primary);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .input-field:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(37, 99, 235, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--color-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .results-hidden {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+        }
+        
+        .results-visible {
+            max-height: 2000px;
+            opacity: 1;
+        }
+        
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* Mobile-specific fixes */
+        @media (max-width: 768px) {
+            .mobile-menu {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 100;
+            }
+            
+            .mobile-menu-content {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 85%;
+                max-width: 400px;
+                height: 100%;
+                background: white;
+                padding: 2rem;
+                overflow-y: auto;
+            }
+            
+            .simulation-visual {
+                height: 250px;
+            }
+            
+            #runSimulation {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+        
+        /* Small mobile fixes */
+        @media (max-width: 480px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .simulation-visual {
+                height: 200px;
+            }
+            
+            .grid-cols-1 > * {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Header/Navigation -->
+    <header class="fixed w-full z-50 py-4 nav-blur">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <div class="logo-svg">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 5C11.7157 5 5 11.7157 5 20C5 28.2843 11.7157 35 20 35C28.2843 35 35 28.2843 35 20C35 11.7157 28.2843 5 20 5Z" stroke="url(#logoGradient)" stroke-width="2.5"/>
+                            <path d="M10 20C10 14.4772 14.4772 10 20 10C25.5228 10 30 14.4772 30 20C30 25.5228 25.5228 30 20 30C14.4772 30 10 25.5228 10 20Z" stroke="url(#logoGradient)" stroke-width="2.5"/>
+                            <path d="M15 20C15 17.2386 17.2386 15 20 15C22.7614 15 25 17.2386 25 20C25 22.7614 22.7614 25 20 25C17.2386 25 15 22.7614 15 20Z" stroke="url(#logoGradient)" stroke-width="2.5"/>
+                            <path d="M20 5V35M5 20H35" stroke="url(#logoGradient)" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M20 10L26 14L20 20L14 26L10 20L14 14L20 10Z" fill="url(#logoGradient)"/>
+                            <defs>
+                                <linearGradient id="logoGradient" x1="5" y1="5" x2="35" y2="35" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#2563eb"/>
+                                    <stop offset="1" stop-color="#0ea5e9"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <a href="index.html" class="text-2xl font-bold gradient-text">SimulaMonte</a>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="index.html" class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300">Home</a>
+                    <a href="#upload" class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300">Upload Data</a>
+                    <a href="#configure" class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300">Configure</a>
+                    <a href="#results" class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300">Results</a>
+                </nav>
+                
+                <!-- CTA Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="index.html" class="px-4 py-2 font-medium text-blue-600 hover:text-blue-700 transition-colors duration-300">Back to Home</a>
+                    <button onclick="exportReport()" class="px-6 py-2.5 gradient-bg text-white font-medium rounded-lg hover:shadow-lg transition-all duration-300">Export Report</button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuButton" class="md:hidden text-gray-700" aria-label="Open menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu hidden">
+            <div class="fixed inset-0 bg-black bg-opacity-80" id="mobileMenuOverlay"></div>
+            <div class="mobile-menu-content">
+                <div class="flex justify-between items-center mb-8">
+                    <div class="logo-container">
+                        <div class="logo-svg">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 5C11.7157 5 5 11.7157 5 20C5 28.2843 11.7157 35 20 35C28.2843 35 35 28.2843 35 20C35 11.7157 28.2843 5 20 5Z" stroke="url(#logoGradient2)" stroke-width="2.5"/>
+                                <path d="M10 20C10 14.4772 14.4772 10 20 10C25.5228 10 30 14.4772 30 20C30 25.5228 25.5228 30 20 30C14.4772 30 10 25.5228 10 20Z" stroke="url(#logoGradient2)" stroke-width="2.5"/>
+                                <path d="M15 20C15 17.2386 17.2386 15 20 15C22.7614 15 25 17.2386 25 20C25 22.7614 22.7614 25 20 25C17.2386 25 15 22.7614 15 20Z" stroke="url(#logoGradient2)" stroke-width="2.5"/>
+                                <path d="M20 5V35M5 20H35" stroke="url(#logoGradient2)" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M20 10L26 14L20 20L14 26L10 20L14 14L20 10Z" fill="url(#logoGradient2)"/>
+                                <defs>
+                                    <linearGradient id="logoGradient2" x1="5" y1="5" x2="35" y2="35" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#2563eb"/>
+                                        <stop offset="1" stop-color="#0ea5e9"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold gradient-text">SimulaMonte</span>
+                    </div>
+                    <button id="closeMobileMenu" class="text-gray-700" aria-label="Close menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="flex flex-col space-y-6">
+                    <a href="index.html" class="text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300">Home</a>
+                    <a href="#upload" class="text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300">Upload Data</a>
+                    <a href="#configure" class="text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300">Configure</a>
+                    <a href="#results" class="text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300">Results</a>
+                    
+                    <div class="pt-6 border-t border-gray-200">
+                        <a href="index.html" class="block w-full text-center px-4 py-3 font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-300 mb-4">Back to Home</a>
+                        <button onclick="exportReport()" class="block w-full text-center px-4 py-3 gradient-bg text-white font-medium rounded-lg hover:shadow-lg transition-all duration-300">Export Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Tool Container -->
+    <div class="pt-24 pb-16">
+        <div class="container mx-auto px-4 md:px-8">
+            <!-- Tool Header -->
+            <div class="mb-10">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Business Simulation Tool
+                    <span class="gradient-text">Digital Wind Tunnel</span>
+                </h1>
+                <p class="text-gray-600">Upload your business data, configure scenarios, and run Monte Carlo simulations to make confident decisions.</p>
+                
+                <!-- Progress Steps -->
+                <div class="mt-8 flex flex-col md:flex-row justify-between items-center">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <div class="w-8 h-8 rounded-full gradient-bg text-white flex items-center justify-center font-bold mr-3">1</div>
+                        <div>
+                            <p class="font-medium text-gray-900">Upload Data</p>
+                            <p class="text-sm text-gray-500">CSV or Excel files</p>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:block w-16 h-1 bg-gray-300 mx-4"></div>
+                    
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <div class="w-8 h-8 rounded-full border-2 border-gray-300 text-gray-400 flex items-center justify-center font-bold mr-3">2</div>
+                        <div>
+                            <p class="font-medium text-gray-900">Configure Scenario</p>
+                            <p class="text-sm text-gray-500">Set parameters</p>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:block w-16 h-1 bg-gray-300 mx-4"></div>
+                    
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full border-2 border-gray-300 text-gray-400 flex items-center justify-center font-bold mr-3">3</div>
+                        <div>
+                            <p class="font-medium text-gray-900">View Results</p>
+                            <p class="text-sm text-gray-500">Simulation outcomes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Tool Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Panel: Configuration -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Data Upload Section -->
+                    <section id="upload" class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-gray-900">1. Upload Business Data</h2>
+                            <button id="sampleDataBtn" class="text-sm text-blue-600 font-medium hover:text-blue-800">Use Sample Data</button>
+                        </div>
+                        
+                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors duration-300" id="dropZone">
+                            <div class="mb-4">
+                                <svg class="w-12 h-12 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                            </div>
+                            <p class="text-gray-700 font-medium mb-2">Drag & drop your CSV or Excel file</p>
+                            <p class="text-gray-500 text-sm mb-4">Or click to browse files</p>
+                            <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" class="hidden">
+                            <label for="fileInput" class="inline-block px-6 py-2 gradient-bg text-white font-medium rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+                                Browse Files
+                            </label>
+                            <p class="text-gray-500 text-xs mt-4">Supported formats: CSV, Excel (max 10MB)</p>
+                        </div>
+                        
+                        <!-- File Info -->
+                        <div id="fileInfo" class="mt-6 hidden">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div>
+                                        <p id="fileName" class="font-medium text-gray-900">sales_data.csv</p>
+                                        <p id="fileSize" class="text-sm text-gray-500">245 KB • 1,200 rows</p>
+                                    </div>
+                                </div>
+                                <button id="removeFile" class="text-red-500 hover:text-red-700">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                                   @keyframes grow {
             to { transform: scaleX(1); }
         }
         
