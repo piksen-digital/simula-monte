@@ -1,0 +1,115 @@
+{
+  "posts": [
+    {
+      "id": "complete-guide-to-monte-carlo-simulation",
+      "title": "The Complete Guide to Monte Carlo Simulation for Small Businesses",
+      "excerpt": "Learn how to apply Monte Carlo methods to make better business decisions without needing a data science team.",
+      "author": {
+        "name": "María Rodríguez",
+        "title": "CEO & Simulation Expert",
+        "avatar": "avatar-maria.jpg"
+      },
+      "date": "2024-04-15",
+      "readTime": "8 min",
+      "tags": ["Simulation", "Tutorial", "Beginners"],
+      "category": "featured",
+      "image": "monte-carlo-guide.jpg",
+      "featured": true,
+      "contentFile": "posts/complete-guide-to-monte-carlo-simulation.html"
+    },
+    {
+      "id": "how-to-simulate-price-changes",
+      "title": "How to Simulate Price Changes Before Implementation",
+      "excerpt": "A step-by-step guide to testing pricing strategies using simulation before making changes that could impact your revenue.",
+      "author": {
+        "name": "Carlos Mendez",
+        "title": "Pricing Strategy Consultant",
+        "avatar": "avatar-carlos.jpg"
+      },
+      "date": "2024-05-03",
+      "readTime": "5 min",
+      "tags": ["Pricing", "Strategy", "Revenue"],
+      "category": "pricing",
+      "image": "price-simulation.jpg",
+      "featured": false,
+      "contentFile": "posts/how-to-simulate-price-changes.html"
+    },
+    {
+      "id": "optimizing-inventory-levels",
+      "title": "Optimizing Inventory Levels with Predictive Simulation",
+      "excerpt": "Reduce stockouts and overstocking by simulating demand patterns and optimizing reorder points for your business.",
+      "author": {
+        "name": "Ana Silva",
+        "title": "Supply Chain Expert",
+        "avatar": "avatar-ana.jpg"
+      },
+      "date": "2024-04-28",
+      "readTime": "6 min",
+      "tags": ["Inventory", "Supply Chain", "Optimization"],
+      "category": "inventory",
+      "image": "inventory-optimization.jpg",
+      "featured": false,
+      "contentFile": "posts/optimizing-inventory-levels.html"
+    },
+    {
+      "id": "retail-chain-profit-increase",
+      "title": "How a Retail Chain Increased Profit by 32% Using Simulation",
+      "excerpt": "Real-world case study of how a medium-sized retailer used our simulation tool to optimize pricing across 15 locations.",
+      "author": {
+        "name": "David Chen",
+        "title": "Business Analyst",
+        "avatar": "avatar-david.jpg"
+      },
+      "date": "2024-04-22",
+      "readTime": "7 min",
+      "tags": ["Case Study", "Retail", "Success Story"],
+      "category": "case-studies",
+      "image": "retail-case-study.jpg",
+      "featured": false,
+      "contentFile": "posts/retail-chain-profit-increase.html"
+    },
+    {
+      "id": "getting-started-with-business-simulation",
+      "title": "Getting Started with Business Simulation: First 5 Steps",
+      "excerpt": "New to simulation? Here's a practical guide to implementing your first business simulation project with minimal data.",
+      "author": {
+        "name": "Sophia Williams",
+        "title": "Product Manager",
+        "avatar": "avatar-sophia.jpg"
+      },
+      "date": "2024-04-18",
+      "readTime": "4 min",
+      "tags": ["Tutorial", "Beginners", "How-to"],
+      "category": "tutorials",
+      "image": "getting-started.jpg",
+      "featured": false,
+      "contentFile": "posts/getting-started-with-business-simulation.html"
+    },
+    {
+      "id": "quantifying-business-risk",
+      "title": "Quantifying Business Risk with Monte Carlo Methods",
+      "excerpt": "Learn how to measure and mitigate business risks by simulating worst-case scenarios and building robust strategies.",
+      "author": {
+        "name": "James Wilson",
+        "title": "Risk Management Specialist",
+        "avatar": "avatar-james.jpg"
+      },
+      "date": "2024-04-12",
+      "readTime": "9 min",
+      "tags": ["Risk Analysis", "Monte Carlo", "Decision Making"],
+      "category": "risk",
+      "image": "risk-analysis.jpg",
+      "featured": false,
+      "contentFile": "posts/quantifying-business-risk.html"
+    }
+  ],
+  "categories": [
+    { "id": "all", "name": "All Topics", "count": 12 },
+    { "id": "pricing", "name": "Pricing Strategy", "count": 3 },
+    { "id": "inventory", "name": "Inventory Management", "count": 2 },
+    { "id": "simulation", "name": "Simulation Techniques", "count": 4 },
+    { "id": "case-studies", "name": "Case Studies", "count": 2 },
+    { "id": "tutorials", "name": "Tutorials", "count": 3 },
+    { "id": "risk", "name": "Risk Analysis", "count": 2 }
+  ]
+}
